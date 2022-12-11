@@ -11,15 +11,17 @@ import javax.persistence.*;
 public class OrderItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private long price;
     private int quantity;
+    private int idProduct;
 
     @ManyToOne
     @JoinColumn(name = "id_order")//name="tên cột khóa ngoại"
     Order order;
+
 
 
 

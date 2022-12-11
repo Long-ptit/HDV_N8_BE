@@ -18,7 +18,7 @@ public class SellerController {
 
     @PostMapping("/saveSeller")
     public ResponseObject getAllGood(@RequestBody Seller seller) {
-        System.out.println(seller.toString());
+       // System.out.println(seller.toString());
         ResponseObject responseObject = new ResponseObject();
         responseObject.setData(null);
         responseObject.setMsg("Save user successfull");

@@ -5,17 +5,19 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-@Table
 @Entity
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String description;
     private int quantity;
     private int price;
+    private double discountPoint;
+    private boolean discount = false;
+    private String msgDiscount;
 
     @ManyToOne
     @JoinColumn(name = "id_seller")//name="tên cột khóa ngoại"

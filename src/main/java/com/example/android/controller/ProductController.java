@@ -1,6 +1,7 @@
 package com.example.android.controller;
 
 import com.example.android.model.Product;
+import com.example.android.model.ProductCategory;
 import com.example.android.model.ResponseObject;
 import com.example.android.model.Seller;
 import com.example.android.repository.CategoryProductRepository;
@@ -40,37 +41,42 @@ public class ProductController {
     @Autowired
     CategoryProductRepository categoryProductRepository;
 
-
+    //from youtube with lo` ve'
     @PostMapping("saveProduct")
     public Product saveFood(
             @RequestParam("product_img") MultipartFile file,
-            @RequestParam("seller_id") String seller_id,
-            @RequestParam("product_name") String product_name,
-            @RequestParam("product_description") String product_description,
-            @RequestParam("product_quantity") int product_quantity,
-            @RequestParam("product_price") int product_price,
-            @RequestParam("category_id") int category_id
+            @RequestParam("product_id") String product_id
     ) throws IOException {
-        System.out.println(product_name);
-        Product product = new Product();
-        product.setName(product_name);
-        product.setDescription(product_description);
-        product.setQuantity(product_quantity);
-        product.setPrice(product_price);
-        System.out.println(seller_id);
-        product.setSeller(sellerRepository.findById(seller_id.trim()).get());
-        product.setProductCategory(categoryProductRepository.findById(category_id).get());
-        Product productSave = productRepository.save(product);
+
 
         String folder = "photos_product/";
         Path path = Paths.get(folder);
         InputStream inputStream = file.getInputStream();
-        Files.copy(inputStream, path.resolve(productSave.getId() + ".jpg"), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(inputStream, path.resolve(product_id + ".jpg"), StandardCopyOption.REPLACE_EXISTING);
         System.out.println(file.getOriginalFilename());
 
+        return new Product();
+    }
+
+    @PostMapping("saveProductWithoutImage")
+    public Product saveProduct(
+           @RequestBody Product product
+    ) {
+        Seller seller = sellerRepository.findById(product.getSeller().getId()).get();
+        ProductCategory productCategory = categoryProductRepository.findById(product.getProductCategory().getId()).get();
+        boolean isDiscount = product.isDiscount();
+        if (isDiscount) {
+            System.out.println("kaka");
+        }
+        product.setProductCategory(productCategory);
+        product.setSeller(seller);
+        product.setDiscount(isDiscount);
+
+        Product productSave = productRepository.save(product);
         return productSave;
     }
 
+    //from youtube with love
     @ResponseBody
     @GetMapping("getImage/{photo}")
     public ResponseEntity<ByteArrayResource> getImage(@PathVariable("photo") String photo) throws IOException {
@@ -96,6 +102,16 @@ public class ProductController {
     @GetMapping(value = "getProductBySeller/{id}")
     public List<Product> getProductByID(@PathVariable String id) {
         List<Product> listProduct = productRepository.getProductBySeller(id.trim());
+//        ResponseObject responseObject = new ResponseObject();
+//        responseObject.setData(listProduct);
+//        responseObject.setMsg("Send data success");
+
+        return listProduct;
+    }
+
+    @PostMapping(value = "searchProduct")
+    public List<Product> searchProduct(@RequestParam("keyword") String key) {
+        List<Product> listProduct = productRepository.searchProductByName(key);
 //        ResponseObject responseObject = new ResponseObject();
 //        responseObject.setData(listProduct);
 //        responseObject.setMsg("Send data success");

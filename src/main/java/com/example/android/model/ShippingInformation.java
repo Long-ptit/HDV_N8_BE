@@ -1,5 +1,6 @@
 package com.example.android.model;
 
+
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,18 +8,21 @@ import javax.persistence.*;
 @Data
 @Table
 @Entity
-public class Cart {
+public class ShippingInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private long createAt;
-    private long totalPrice;
-    private int totalQuantity;
+    private String name;
+    private String phone;
+    private String address;
+    private Boolean isDefault = false;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_user")//name="tên cột khóa ngoại"
-    private User user;
+    User user;
+
+
 
 
 }

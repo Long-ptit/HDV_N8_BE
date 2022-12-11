@@ -7,17 +7,18 @@ import javax.persistence.*;
 @Data
 @Table
 @Entity
-public class CartItem {
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    private int numStars;
+    private String content;
     private long createAt;
-    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "id_cart")
-    private Cart cart;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "id_product")
