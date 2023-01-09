@@ -22,6 +22,12 @@ public class OrderItem {
     @JoinColumn(name = "id_order")//name="tên cột khóa ngoại"
     Order order;
 
+    @ManyToOne
+    @JoinColumn(name = "id_product_data")//name="tên cột khóa ngoại"
+    Product product;
+
+
+
 
 
 

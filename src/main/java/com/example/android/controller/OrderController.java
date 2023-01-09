@@ -20,6 +20,9 @@ public class OrderController {
     CartRepository cartRepository;
 
     @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
     CartItemRepository cartItemRepository;
 
     @Autowired
@@ -50,12 +53,16 @@ public class OrderController {
 
         for (CartItem item : itemList) {
             OrderItem orderItem = new OrderItem();
+            Product product = productRepository.findById(item.getProduct().getId()).get();
             orderItem.setName(item.getProduct().getName());
             orderItem.setQuantity(item.getQuantity());
             orderItem.setPrice(item.getProduct().getPrice());
             orderItem.setIdProduct(item.getProduct().getId());
+            orderItem.setProduct(product);
             orderItem.setOrder(orderSaved);
             orderItemRepository.save(orderItem);
+            product.setQuantity(product.getQuantity() - item.getQuantity());
+            productRepository.save(product);
         }
 
 
@@ -114,12 +121,33 @@ public class OrderController {
     ) {
         Order order = orderRepository.findById(idOrder).get();
         order.setTypeStatus(type_status);
+
+        if (type_status == 3) {
+            List<OrderItem> listOrderItem = orderItemRepository.findOrderItemByOrder(idOrder);
+            for(OrderItem item: listOrderItem) {
+                Product product = productRepository.findById(item.getIdProduct()).get();
+                System.out.println();
+               // product.setQuantity(product.getQuantity() - item.getQuantity());
+                product.setSoldNumber(product.getSoldNumber() + item.getQuantity());
+                productRepository.save(product);
+            }
+        }
+
+        if (type_status == 4) {
+            List<OrderItem> listOrderItem = orderItemRepository.findOrderItemByOrder(idOrder);
+            for(OrderItem item: listOrderItem) {
+                Product product = productRepository.findById(item.getIdProduct()).get();
+                System.out.println();
+                 product.setQuantity(product.getQuantity() + item.getQuantity());
+                //product.setSoldNumber(product.getSoldNumber() + item.getQuantity());
+                productRepository.save(product);
+            }
+        }
+
         orderRepository.save(order);
         ResponseObject responseObject = new ResponseObject();
         responseObject.setData(order);
         responseObject.setMsg("Thay doi trang thai don hang thanh cong");
         return responseObject;
     }
-
-
 }

@@ -29,10 +29,16 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 //    @Query(value="SELECT * FROM my_order WHERE create_at like %?1% and id_seller = ?2",nativeQuery = true)
 //    List<Order> getDateLike(String key, String idSeller);
 
-    @Query(value="SELECT * FROM my_order WHERE id_seller = ?3 and date_new between ?1 and ?2",nativeQuery = true)
+    @Query(value="SELECT * FROM my_order WHERE id_seller = ?3 and type_status = 3 and date_new between ?1 and ?2 ",nativeQuery = true)
     List<Order> getDateBetween1(Date date1, Date date2, String idSeller);
 
-    @Query(value="SELECT * FROM my_order WHERE date_new like %?1% and id_seller = ?2",nativeQuery = true)
+    @Query(value="SELECT * FROM my_order WHERE id_seller = ?3 and type_status = 3 and date_new between ?1 and ?2 ORDER BY total_price ASC ",nativeQuery = true)
+    List<Order> getDateBetween1INC(Date date1, Date date2, String idSeller);
+
+    @Query(value="SELECT * FROM my_order WHERE id_seller = ?3 and type_status = 3 and date_new between ?1 and ?2 ORDER BY total_price DESC ",nativeQuery = true)
+    List<Order> getDateBetween1DEC(Date date1, Date date2, String idSeller);
+
+    @Query(value="SELECT * FROM my_order WHERE date_new like %?1% and id_seller = ?2 and type_status = 3",nativeQuery = true)
     List<Order> getDateLike(String key, String idSeller);
 
 }

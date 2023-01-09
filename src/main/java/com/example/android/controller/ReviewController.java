@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/review")
@@ -22,8 +23,16 @@ public class ReviewController {
     @Autowired
     ReviewRepository reviewRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
     @PostMapping("/createReview")
     public ResponseObject createReview(@RequestBody Review review) {
+
+        OrderItem orderItem = orderItemRepository.findById(review.getOrderItem().getId()).get();
+        Product product = productRepository.findById(orderItem.getIdProduct()).get();
+        product.setNumReview(product.getNumReview() + 1);
+        productRepository.save(product);
         Review reviewSaved = reviewRepository.save(review);
         ResponseObject responseObject = new ResponseObject();
         responseObject.setData(reviewSaved);
@@ -81,6 +90,26 @@ public class ReviewController {
         ResponseObject responseObject = new ResponseObject();
         responseObject.setData(reviewDTO);
         responseObject.setMsg("Lưu dữ liệu thành công");
+        return responseObject;
+    }
+
+    @GetMapping("/testReview/{id}")
+    public ResponseObject checkReview(@PathVariable("id") int id)
+    {
+        String result;
+        String data;
+        Review reviewOptional = reviewRepository.getReviewByOrderItem(id);
+        if (reviewOptional != null) {
+            result = "không thể đánh giá";
+            data = "NO";
+        } else {
+            result = "có thể đánh giá";
+            data = "YES";
+        }
+
+        ResponseObject responseObject = new ResponseObject();
+        responseObject.setData(data);
+        responseObject.setMsg(result);
         return responseObject;
     }
 

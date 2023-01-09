@@ -92,13 +92,23 @@ public class StatisticController {
     public List<Order> getStatisticByTime(
             @RequestParam("start") String start,
             @RequestParam("end") String end,
-            @RequestParam("id_seller") String idSeller
+            @RequestParam("id_seller") String idSeller,
+            @RequestParam("sort") int sort
     ) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date date1 = format.parse(start + " 00:00:00");
         Date date2 = format.parse(end + " 00:00:00");
-        List<Order> listOrder = orderRepository.getDateBetween1(date1, date2, idSeller);
+        List<Order> listOrder = new ArrayList<>();
+        if (sort == 0) {
+            listOrder = orderRepository.getDateBetween1(date1, date2, idSeller);
+        } else if (sort == 1) {
+            listOrder = orderRepository.getDateBetween1INC(date1, date2, idSeller);
+        } else {
+            listOrder = orderRepository.getDateBetween1DEC(date1, date2, idSeller);
+        }
+
+
 
         return listOrder;
     }

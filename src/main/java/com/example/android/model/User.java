@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy=InheritanceType.JOINED)
 public class User implements Serializable {
 
     @Id
@@ -18,8 +18,7 @@ public class User implements Serializable {
     private String email;
     private long createAt;
     private String phone;
-    private int role;
-    private String uid;
+    private String userType;
 
 
 }

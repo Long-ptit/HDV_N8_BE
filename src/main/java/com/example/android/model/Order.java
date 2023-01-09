@@ -23,6 +23,7 @@ public class Order {
     private String description;
     private Boolean isSuccess;
     private int typeStatus;
+    private String paymentType;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+7")

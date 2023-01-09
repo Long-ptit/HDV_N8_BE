@@ -39,6 +39,7 @@ public class UserController {
         System.out.println(user.toString());
         ResponseObject responseObject = new ResponseObject();
         responseObject.setData(null);
+        user.setUserType("USER");
         responseObject.setMsg("Save user successfull");
         User userSaved = userRepository.save(user);
 
@@ -51,6 +52,7 @@ public class UserController {
         ShippingInformation shippingInformation = new ShippingInformation();
         shippingInformation.setUser(userSaved);
         shippingInformation.setIsDefault(true);
+        shippingInformation.setName(userSaved.getName());
         shippingInformation.setPhone(userSaved.getPhone());
         shippingInformation.setAddress(userSaved.getAddress());
         shippingInformationRepository.save(shippingInformation);
@@ -70,12 +72,8 @@ public class UserController {
     }
 //
     @RequestMapping("/getInforUser/{id}")
-    public ResponseObject getInfor(@PathVariable("id") String id) {
-        ResponseObject responseObject = new ResponseObject();
-        responseObject.setMsg("Lay thanh cong");
-        responseObject.setData(userRepository.findById(id).get());
-
-        return responseObject;
+    public User getInfor(@PathVariable("id") String id) {
+        return userRepository.findById(id).get();
     }
 
     @RequestMapping("/getInforSeller/{id}")

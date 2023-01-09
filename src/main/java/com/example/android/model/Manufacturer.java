@@ -1,6 +1,5 @@
 package com.example.android.model;
 
-
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,22 +7,15 @@ import javax.persistence.*;
 @Data
 @Table
 @Entity
-public class ShippingInformation {
+public class Manufacturer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    private String phone;
     private String address;
-    private Boolean isDefault = false;
-    private String deleteAt;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user")//name="tên cột khóa ngoại"
-    User user;
-
-
-
-
+    private String phone;
+    private String yearPublish;
+    private String email;
+    private String taxNumber;
 }

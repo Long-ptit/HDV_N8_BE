@@ -1,10 +1,8 @@
 package com.example.android.controller;
 
-import com.example.android.model.Product;
-import com.example.android.model.ProductCategory;
-import com.example.android.model.ResponseObject;
-import com.example.android.model.Seller;
+import com.example.android.model.*;
 import com.example.android.repository.CategoryProductRepository;
+import com.example.android.repository.ManufacturerRepository;
 import com.example.android.repository.ProductRepository;
 import com.example.android.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,9 @@ public class ProductController {
     @Autowired
     CategoryProductRepository categoryProductRepository;
 
+    @Autowired
+    ManufacturerRepository manufacturerRepository;
+
     //from youtube with lo` ve'
     @PostMapping("saveProduct")
     public Product saveFood(
@@ -64,17 +65,20 @@ public class ProductController {
     ) {
         Seller seller = sellerRepository.findById(product.getSeller().getId()).get();
         ProductCategory productCategory = categoryProductRepository.findById(product.getProductCategory().getId()).get();
+        Manufacturer manufacturer = manufacturerRepository.findById(product.getManufacturer().getId()).get();
         boolean isDiscount = product.isDiscount();
         if (isDiscount) {
             System.out.println("kaka");
         }
         product.setProductCategory(productCategory);
         product.setSeller(seller);
+        product.setManufacturer(manufacturer);
         product.setDiscount(isDiscount);
 
         Product productSave = productRepository.save(product);
         return productSave;
     }
+    
 
     //from youtube with love
     @ResponseBody

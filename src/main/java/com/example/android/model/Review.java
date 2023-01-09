@@ -21,6 +21,6 @@ public class Review {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "id_product")
-    private Product product;
+    @JoinColumn(name = "id_order_item")
+    private OrderItem orderItem;
 }

@@ -15,9 +15,14 @@ public class Product {
     private String description;
     private int quantity;
     private int price;
-    private double discountPoint;
+    private int discountPoint;
     private boolean discount = false;
     private String msgDiscount;
+    private String specification;
+    private String deleteAt;
+    private int soldNumber;
+    private int numReview;
+    private String yearPublish;
 
     @ManyToOne
     @JoinColumn(name = "id_seller")//name="tên cột khóa ngoại"
@@ -26,4 +31,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "id_category")//name="tên cột khóa ngoại"
     ProductCategory productCategory ;
+
+    @ManyToOne
+    @JoinColumn(name = "id_manufacturer")//name="tên cột khóa ngoại"
+    Manufacturer manufacturer ;
 }

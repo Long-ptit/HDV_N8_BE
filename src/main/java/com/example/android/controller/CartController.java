@@ -3,6 +3,7 @@ package com.example.android.controller;
 
 import com.example.android.model.Cart;
 import com.example.android.model.CartItem;
+import com.example.android.model.Product;
 import com.example.android.model.ResponseObject;
 import com.example.android.repository.CartItemRepository;
 import com.example.android.repository.CartRepository;
@@ -34,7 +35,12 @@ public class CartController {
         int sumQuantity = 0;
 
         for (CartItem item: listCartItem) {
-            sumPrice += (long) item.getProduct().getPrice() * item.getQuantity();
+            if (item.getProduct().isDiscount()) {
+                sumPrice += (long) item.getProduct().getPrice() * item.getQuantity() * (100- item.getProduct().getDiscountPoint())/100
+                ;
+            } else {
+                sumPrice += (long) item.getProduct().getPrice() * item.getQuantity();
+            }
             sumQuantity += item.getQuantity();
         }
         cart.setTotalPrice(sumPrice);
@@ -53,16 +59,39 @@ public class CartController {
             @RequestParam("user_id") String user_id,
             @RequestParam("quantity") int quantity
     ) {
+        Product product = productRepository.findById(product_id).get();
+
         Cart cart = cartRepository.findCartOfUser(user_id);
         CartItem cartItem = cartItemRepository.findCartItemByIdCartAndProduct(cart.getId(), product_id);
+        System.out.println("Quantity" + quantity);
+
         if (cartItem != null) {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
+
+            int finalQuantity = quantity + cartItem.getQuantity();
+            if (product.getQuantity() < finalQuantity) {
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setData(null);
+                responseObject.setMsg("Bạn cần nhập số lượng nhỏ hơn");
+
+                return responseObject;
+            }
         } else {
+
+            if (product.getQuantity() < quantity) {
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setData(null);
+                responseObject.setMsg("Bạn cần nhập số lượng nhỏ hơn");
+
+                return responseObject;
+            }
+
             cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setCreateAt(0);
             cartItem.setQuantity(quantity);
             cartItem.setProduct(productRepository.findById(product_id).get());
+
         }
         cartItemRepository.save(cartItem);
 
